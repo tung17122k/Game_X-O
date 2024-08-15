@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .game-board {
+        margin: 25px;
+        width: 500px;
+        height: 500px;
+        /* border: 1px solid #ccc; */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        grid-gap: 25px;
+      }
+      .game-reset {
+        margin: 25px;
+        display: inline-block;
+        padding: 15px 20px;
+        color: white;
+        background-color: #6a5af9;
+        border-radius: 8px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+      .game-cell {
+        /* border: 1px solid #ccc; */
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 40px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <div class="game-board"></div>
+      <p class="game-winner"></p>
+      <button class="game-reset">Reset game</button>
+    </div>
+    <script>
+      class Cell {
+        constructor() {
+          this.value = "";
+        }
+        getValue() {
+          return this.value;
+        }
+        setValue(value) {
+          this.value = value;
+        }
+        resetValue() {
+          this.value = "";
+        }
+      }
+
+      const cells = Array.from({ length: 9 }, () => new Cell());
+      console.log(cells);
+      let countClick = 0;
+
+      const board = document.querySelector(".game-board");
+      const winner = document.querySelector(".game-winner");
+      const reset = document.querySelector(".game-reset");
+      let currentValue = "X";
+      let gameOver = false;
+      cells.forEach((item, index) => {
+        const cell = document.createElement("div");
+        cell.classList.add("game-cell");
+        board.appendChild(cell);
+        cell.addEventListener("click", () => {
+          if (!gameOver && !item.getValue()) {
+            item.setValue(currentValue);
+            cell.textContent = currentValue;
+            currentValue = currentValue === "X" ? "O" : "X";
+            countClick++;
+            console.log(countClick);
+            if (countClick === 9) {
+              winner.textContent = "X-O Hòa";
+            }
+
+            if (currentValue === "X") {
+              cell.style.color = "#EB0A00";
+            } else cell.style.color = "#5409EB";
+            checkWinner();
+          }
+        });
+        reset.addEventListener("click", () => {
+          cells.forEach((item) => item.resetValue());
+          document
+            .querySelectorAll(".game-cell")
+            .forEach((cell) => (cell.textContent = ""));
+          currentValue = "X";
+          gameOver = false;
+          winner.textContent = "";
+        });
+        function checkWinner() {
+          const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+          ];
+          for ([a, b, c] of lines) {
+            if (
+              cells[a].getValue() &&
+              cells[a].getValue() === cells[b].getValue() &&
+              cells[a].getValue() === cells[c].getValue()
+            ) {
+              gameOver = true;
+              winner.textContent = `winner is ${cell.textContent}`;
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
