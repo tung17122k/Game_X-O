@@ -87,7 +87,11 @@
 
             if (currentValue === "X") {
               cell.style.color = "#EB0A00";
-            } else cell.style.color = "#5409EB";
+              winner.style.color = "#EB0A00";
+            } else {
+              cell.style.color = "#5409EB";
+              winner.style.color = "#5409EB";
+            }
             checkWinner();
           }
         });
@@ -95,7 +99,7 @@
           cells.forEach((item) => item.resetValue());
           document
             .querySelectorAll(".game-cell")
-            .forEach((cell) => (cell.textContent = ""));
+            .forEach((item) => (item.textContent = ""));
           currentValue = "X";
           gameOver = false;
           winner.textContent = "";
